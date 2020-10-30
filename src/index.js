@@ -20,32 +20,48 @@ let ctx = canvas.getContext("2d");
 let pixelRatio = 1.5;
 canvas.width = window.innerWidth * pixelRatio;
 canvas.height = window.innerHeight * pixelRatio;
-let x2 = 0;
-let y2 = 0;
 let p1 = {
-    x: canvas.width/2.5,
-    y: canvas.height/2.5
+    x: canvas.width / 2.5,
+    y: canvas.height / 2.5
 };
 let p2 = {
-    x: canvas.width/4,
-    y:  canvas.height/4
+    x: canvas.width / 4,
+    y: canvas.height / 4
 };
 
 let penDown = false;
 let last_x = 0;
 let last_y = 0;
 let clear = document.getElementById("clear");
+let click = "left";
 
 canvas.addEventListener("mousemove", function (e) {
-    p1 = {
-        x: e.clientX * pixelRatio,
-        y: e.clientY * pixelRatio
-    };
-    // render();
+
+    if (click == "left") {
+        p1 = {
+            x: e.clientX * pixelRatio,
+            y: e.clientY * pixelRatio
+        };
+    }
+
+
+    render();
     drawLine();
-    paintMove(p1.x, p1.y, p2.x, p2.y)
     middleCircle();
+
+    if (click == "right") {
+        p2 = {
+            x: e.clientX * pixelRatio,
+            y: e.clientY * pixelRatio
+        };
+    }
+
+    paintMove(p1.x, p1.y, p2.x, p2.y)
+
+
 });
+
+//how to end when right click is clicked - paint end
 
 canvas.addEventListener("touchmove", function (e) {
     e.preventDefault();
@@ -79,7 +95,7 @@ function render() {
 
     // ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.3)`;
-    ctx.globalAlpha = 0.5;//could be performance piece 
+    ctx.globalAlpha = 0.5; //could be performance piece 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // ctx.fillStyle="black";
@@ -90,7 +106,7 @@ clear.addEventListener("click", function () {
 
     // clear variables 
     render();
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 
 })
@@ -119,8 +135,8 @@ function paintStart(x, y) {
     penDown = true;
     last_x = x;
     last_y = y;
-    // time = new Date();
-    // diffTime = 0;
+
+    // console.log("paintstart")
 }
 let effects = ["soft-light", "difference", "exclusion", "luminosity", "color-burn"];
 let index = 0;
@@ -141,21 +157,20 @@ function paintMove(x, y, x2, y2) {
     let changingCol = `rgba(${x%255},${y%255},${(x2+y2)%255},0.2)`;
 
     let interpolatedPoints = pointsAlongLine(x, y, x2, y2, rate);
-    // interpolatedPoints.forEach(function (p) {
     ctx.beginPath();
     ctx.fillStyle = changingCol;
     ctx.arc(x2 + norm_random(20), y2 + norm_random(20), Math.abs(norm_random(100)), 0, Math.PI * 2);
     ctx.arc(x + norm_random(20), y + norm_random(20), Math.abs(norm_random(100)), 0, Math.PI * 2);
     ctx.fill();
-    // });
-    // x2 = x;
-    // y2 = y;
+    // x = last_x;
+    // y = last_y;
 }
 
 function paintEnd(x, y) {
     pushState();
     console.log("push state: paint end")
-    // diffTime = 0;
+    // x = last_x;
+    // y = last_y;
 }
 
 
@@ -175,8 +190,8 @@ function middleCircle() {
     ctx.fill();
     ctx.beginPath();
     //   ctx.arc(p3.x, p3.y, 15, 0, Math.PI * 2);
-    ctx.font = "20px monospace";
-    ctx.fillText(length.toFixed(1) + "px", p3.x + 20, p3.y);
+    // ctx.font = "20px monospace";
+    // ctx.fillText(length.toFixed(1) + "px", p3.x + 20, p3.y);
 
 }
 
@@ -215,16 +230,35 @@ canvas.addEventListener("mouseup", function (evt) {
     penDown = false;
     let x = evt.clientX * pixelRatio;
     let y = evt.clientY * pixelRatio;
-    paintEnd(p1.x, p1.y);
+    paintEnd(x, y);
 });
 
 
 canvas.addEventListener("touchend", function (evt) {
-    paintEnd(p1.x, p1.y);
+    penDown = false;
+    let x = evt.clientX * pixelRatio;
+    let y = evt.clientY * pixelRatio;
+    paintEnd(x, y);
 });
 
-canvas.addEventListener("mousedown", function (evt) {
-    paintStart(p1.x, p1.y);
+//disable right click context menu 
+canvas.oncontextmenu = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+canvas.addEventListener("mousedown", function (e) {
+    paintStart(e.clientX, e.clientY);
+
+    if (e.button == 2) {
+        click = "right";
+        console.log("right click")
+    } else {
+        click = "left";
+        console.log("left click")
+
+    }
+
 });
 
 let save = document.getElementById("save");
@@ -236,3 +270,7 @@ save.addEventListener("click", function () {
         saveAs(blob, "drawing.png");
     });
 })
+
+
+
+//tone js creating sounds 

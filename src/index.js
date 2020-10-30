@@ -14,6 +14,25 @@ import {
 } from './fileSaver.js';
 
 
+let intro = document.getElementById("intro");
+intro.addEventListener("click",function(){
+    disappear();
+})
+
+window.setTimeout(disappear,2000);
+
+function disappear(){
+
+    if(intro.style.display=="none"){
+        intro.style.display="block";
+    }else{
+        intro.style.display="none";
+    
+}
+}
+
+
+
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 

@@ -1,25 +1,24 @@
-body {
-  font-family: sans-serif;
-  margin: 0;
-  position: relative;
-  background-size: 20px 20px;
-  /* background-image: linear-gradient(to right, #aaa 1px, transparent 1px),
-    linear-gradient(to bottom, #aaa 1px, transparent 1px); */
-    /* background-color: red; */
+* {
+  font-family: 'Indie Flower', cursive;
+  font-size: x-large;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
 
 canvas {
-  box-shadow: 1px 1px 10px black;
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   z-index: -100;
-  /* image-rendering: pixelated; */
 }
 
 canvas,
@@ -29,15 +28,67 @@ html {
 
 button {
 
-  height: 50px;
-  width: 100px;
+  height: 8vh;
+  width: 100%;
   z-index: 200;
-  background-color: orange;
   border-style: none;
-  /* border-radius: 5px; */
+  font-size:3vh;
+  box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background-color:transparent;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	padding:10px;
+	text-decoration:none;
+
 
 }
 
-button:hover{
-  background-color: lightcoral;
+button:hover {
+  background-color: transparent;
+}
+button:active {
+  position: relative;
+  top: 1px;
+}
+
+#selections {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+
+
+}
+
+#intro {
+  display: block;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100vw;
+
+  height: 100vh;
+  text-align: center;
+
+  display: table-cell;
+  vertical-align: middle;
+  background-color: black;
+  color: white;
+}
+@media only screen and (min-width: 600px) {
+  *{
+
+    font-size: 8vh;
+  } 
+  button{
+    font-size: 4vh;
+    height: 10vh;
+  }
 }
